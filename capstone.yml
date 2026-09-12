@@ -1,0 +1,34 @@
+name: llm-usage-metering-billing-service
+description: Meters usage, enforces quotas, calculates costs, and syncs plans via Stripe test-mode webhooks.
+
+run: npm start
+seed: npm run seed
+base_url: http://localhost:3000
+
+env_required:
+  - DATABASE_URL
+  - PORT
+  - STRIPE_SECRET_KEY
+  - STRIPE_WEBHOOK_SECRET
+
+demo_tenant:
+  api_key: demo-key-123
+  plan: free
+
+endpoints:
+  - method: POST
+    path: /generate
+    auth: X-API-Key header + Idempotency-Key header
+    description: Records a billable usage event (api_call or ai_tokens)
+  - method: GET
+    path: /usage
+    auth: X-API-Key header
+    description: Current month's usage vs plan limits
+  - method: POST
+    path: /billing/checkout
+    auth: X-API-Key header
+    description: Creates a Stripe Checkout session to upgrade to Pro
+  - method: POST
+    path: /webhooks/stripe
+    auth: Stripe-Signature header (verified server-side)
+    description: Receives Stripe events, syncs tenant plan/subscription status
