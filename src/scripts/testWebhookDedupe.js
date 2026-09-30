@@ -3,7 +3,7 @@ const billingService = require('../services/billingService');
 
 async function run() {
   const fakeEvent = {
-    id: 'evt_test_dedupe_123',
+    id: 'evt_test_dedupe_123',//internship code
     type: 'customer.subscription.updated',
     data: { object: { customer: 'cus_test_fake', status: 'active' } }
   };
